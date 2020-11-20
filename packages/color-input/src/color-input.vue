@@ -39,7 +39,7 @@ function colorMap(value) {
     : value;
 }
 export default {
-  name: "colorInput",
+  name: "ColorInput",
   components: {
     VColor: VColor,
   },
@@ -228,7 +228,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
 .m-colorPicker {
   .color-row{
     display: flex;

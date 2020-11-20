@@ -1,10 +1,10 @@
 // 导入组件
-import colorInput from './src/color-input.vue'
+import ColorInput from './src/color-input.vue'
 
 // 为组件提供 install 安装方法，供按需引入
-colorInput.install = function (Vue) {
-  Vue.component(colorInput.name, colorInput)
+ColorInput.install = function (Vue) {
+  Vue.component(ColorInput.name, ColorInput)
 }
 
 // 默认导出组件
-export default colorInput
+export default ColorInput

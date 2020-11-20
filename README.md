@@ -23,7 +23,7 @@ Vue.use(vcolorinput)
 
 ```js
 <template>
-  <colorInput v-model="color" />
+  <ColorInput v-model="color" />
 </template>
 <script>
   export default {
@@ -50,5 +50,5 @@ Vue.use(vcolorinput)
 `change`颜色值改变的时候触发
 
 ``` js
-<colorInput v-model="color" v-on:change="headleChangeColor" />
+<ColorInput v-model="color" v-on:change="headleChangeColor" />
 ```
