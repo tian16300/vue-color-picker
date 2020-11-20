@@ -9,7 +9,7 @@
       <h1>vColorPicker</h1>
       <p>本插件仿照<code>Angular</code>的<code><a href="http://zhangbobell.github.io/color-picker/" target="_blank">color-picker</a></code>插件制作</p>
       <h2>Demo</h2>
-      <colorPicker v-model="color" v-on:change="headleChangeColor"></colorPicker>&nbsp;
+      <ColorInput v-model="color" v-on:change="headleChangeColor"></ColorInput>&nbsp;
     
       <h2>特点</h2>
       <ol>
@@ -18,16 +18,16 @@
         <li>在支持 html5 input[type='color'] 的浏览器实现了「更多颜色」的功能</li>
       </ol>
       <h2>安装</h2>
-      <pre>$ npm install vcolorpicker -S</pre>
+      <pre>$ npm install vcolorinput -S</pre>
       <h2>使用</h2>
       <h3>在 `main.js` 文件中引入插件并注册</h3>
 <pre># main.js
-import vcolorpicker from 'vcolorpicker'
-Vue.use(vcolorpicker)
+import vcolorinput from 'vcolorinput'
+Vue.use(vcolorinput)
 </pre>
-      <h3>在项目中使用 vcolorpicker</h3>
+      <h3>在项目中使用 vcolorinput</h3>
 <pre>&lt;template&gt;
-  &lt;colorPicker v-model=&quot;color&quot; /&gt;
+  &lt;ColorInput v-model=&quot;color&quot; /&gt;
 &lt;/template&gt;
 &lt;script&gt;
   export default {

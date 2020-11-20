@@ -1,11 +1,11 @@
 <template lang="html">
-  <div class="m-colorPicker" tabindex="-1" ref="colorPicker" v-on:click="event => { event.stopPropagation() }">
+  <div class="m-color-picker" tabindex="-1" v-on:click="event => { event.stopPropagation() }">
     <!-- 颜色显示小方块 -->
     <div class="color-row">
       <div class="color-col-2">
       <div class="colorBtn"
       v-bind:style="`background: ${showColor}`"
-      v-on:click="openStatus = !disabled"
+      v-on:click="handlerOpenPicker"
       v-bind:class="{ disabled: disabled }"
     ></div>
     </div>
@@ -14,11 +14,14 @@
      </div>
     </div>
      <!-- 颜色色盘 -->
-    <div class="box" v-bind:class="{ open: openStatus }">
+    <div ref="picker" class="color-input-picker" :style="{
+      left:left,
+      top:top
+    }" v-bind:class="{ open: openStatus }">
         <VColor v-model="html5Color" @change="handleChangeColor"  />
         <ul class="tColor">
           <li 
-            v-for="(color, index) of bColor"
+            v-for="(color, index) of tColor"
             :key="index"
             v-bind:style="{ background: colorMap(color) }"
             v-on:mouseover="hoveColor = color"
@@ -78,35 +81,11 @@ export default {
         "#8165a0",
         "#47acc5",
         "#f9974c",
-      ],
-      // 颜色面板
-      colorConfig: [
-        ["#7f7f7f", "#f2f2f2"],
-        ["#0d0d0d", "#808080"],
-        ["#1c1a10", "#ddd8c3"],
-        ["#0e243d", "#c6d9f0"],
-        ["#233f5e", "#dae5f0"],
-        ["#632623", "#f2dbdb"],
-        ["#4d602c", "#eaf1de"],
-        ["#3f3150", "#e6e0ec"],
-        ["#1e5867", "#d9eef3"],
-        ["#99490f", "#fee9da"],
-      ],
-      // 标准颜色
-      bColor: [
-        "#c21401",
-        "#ff1e02",
-        "#ffc12a",
-        "#ffff3a",
-        "#90cf5b",
-        "#00af57",
-        "#00afee",
-        "#0071be",
-        "#00215f",
-        "#72349d",
         "transparent",
       ],
       html5Color: this.value,
+      left: "0px",
+      top: "0px",
     };
   },
   computed: {
@@ -134,11 +113,17 @@ export default {
   },
   methods: {
     colorMap,
-    handleChangeInput(e){
+    handlerOpenPicker() {
+      let pos = this.$el.getBoundingClientRect();
+      this.left = this.$el.scrollLeft + pos.left + "px";
+      this.top = this.$el.scrollTop + pos.top + 240 + "px";
+      this.openStatus = !this.disabled;
+    },
+    handleChangeInput(e) {
       this.updataValue(e.target.value);
     },
     documentBlurClosePanel(e) {
-      if (!e.target.closest(".m-colorPicker")) {
+      if (!e.target.closest(".color-input-picker")) {
         this.closePanel();
       }
     },
@@ -217,32 +202,41 @@ export default {
     },
   },
   created() {
+    /*添加click事件*/
     document.addEventListener("click", this.documentBlurClosePanel.bind(this));
+  },
+  mounted() {
+    document.body.append(this.$refs.picker);
+    let pos = this.$el.getBoundingClientRect();
+    this.left = this.$el.scrollLeft + pos.left + "px";
+    this.top = this.$el.scrollTop + pos.top + 280 + "px";
   },
   beforeDestroy() {
     document.removeEventListener(
       "click",
       this.documentBlurClosePanel.bind(this)
     );
+    document.body.removeChild(this.$refs.picker);
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.m-colorPicker {
-  .color-row{
+.m-color-picker {
+  display: inline-block;
+  .color-row {
     display: flex;
     flex-flow: row wrap;
   }
-  .color-col-2{
-        flex: 0 0 20%;
-       max-width: 20%;
-       padding-right:4px;
+  .color-col-2 {
+    flex: 0 0 20%;
+    max-width: 20%;
+    padding-right: 4px;
   }
-  .color-col-7{
-       flex: 0 0 70%;
-      max-width: 70%;
-      padding: 0 4px;
+  .color-col-7 {
+    flex: 0 0 70%;
+    max-width: 70%;
+    padding: 0 4px;
   }
   .color-input {
     box-sizing: border-box;
@@ -252,6 +246,7 @@ export default {
     font-feature-settings: "tnum";
     position: relative;
     display: inline-block;
+    vertical-align: middle;
     width: 100%;
     height: 32px;
     padding: 4px 11px;
@@ -262,30 +257,17 @@ export default {
     background-image: none;
     border: 1px solid #d9d9d9;
     border-radius: 4px;
-    transition: all 0.3s;
-    &:focus,&:hover{
+    transition: top 0.3s;
+    &:focus,
+    &:hover {
       border-color: #40a9ff;
-      border-right-width: 1px!important;
+      border-right-width: 1px !important;
     }
   }
   position: relative;
   text-align: left;
   font-size: 14px;
-  display: inline-block;
   outline: none;
-  /deep/ .cp__fm-switcher > div {
-    margin-top: -14px;
-  }
-  ul,
-  li,
-  ol {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  input {
-    display: none;
-  }
   .colorBtn {
     width: 100%;
     height: 32px;
@@ -293,38 +275,13 @@ export default {
     box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
     border-radius: 3px;
     margin-right: 10px;
+    cursor: pointer;
+    vertical-align: middle;
   }
   .colorBtn.disabled {
     cursor: no-drop;
   }
-  .box {
-    position: absolute;
-    width: 250px;
-    background: #fff;
-    border: 1px solid #ddd;
-    visibility: hidden;
-    border-radius: 2px;
-    margin-top: 2px;
-    padding-bottom: 5px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
-    opacity: 0;
-    transition: all 0.3s ease;
-    box-sizing: content-box;
-    h3 {
-      margin: 0;
-      font-size: 14px;
-      font-weight: normal;
-      margin-top: 10px;
-      margin-bottom: 5px;
-      line-height: 1;
-      color: #333;
-    }
-  }
-  .box.open {
-    visibility: visible;
-    opacity: 1;
-    z-index: 1;
-  }
+
   .hd {
     overflow: hidden;
     line-height: 29px;
@@ -343,7 +300,53 @@ export default {
       color: #333;
     }
   }
+}
+.color-input-picker {
+  ul,
+  li,
+  ol {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  /deep/ .cp__fm-switcher > div {
+    margin-top: -10px;
+  }
+  /deep/ .cp__ctrl-pane {
+    padding: 8px 8px;
+  }
+  /deep/ .cp__fm-fields {
+    line-height: 1.2;
+    span {
+      margin-top: 6px;
+    }
+  }
+  position: absolute;
+  width: 250px;
+  background: #fff;
+  border: 1px solid #ddd;
+  visibility: hidden;
+  border-radius: 2px;
+  margin-top: 2px;
+  padding-bottom: 5px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  transition: all 0.3s ease;
+  box-sizing: content-box;
+  h3 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: normal;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    line-height: 1;
+    color: #333;
+  }
+
   .tColor {
+    line-height: 1.4;
+    padding: 0 6px;
+    margin: 0;
     li {
       width: 16px;
       height: 16px;
@@ -352,33 +355,21 @@ export default {
       transition: all 0.3s ease;
       border-radius: 3px;
       box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
+      cursor: pointer;
     }
     li:hover {
       transform: scale(1.3);
-    }
-  }
-  .bColor {
-    li {
-      width: 15px;
-      display: inline-block;
-      margin: 0 2px;
-      li {
-        display: block;
-        width: 15px;
-        height: 15px;
-        transition: all 0.3s ease;
-        margin: 0;
-      }
-      li:hover {
-        box-shadow: 0 0 5px rgba(0, 0, 0, 0.4);
-        transform: scale(1.3);
-      }
     }
   }
   /* 颜色选择器复写 */
   .cp__wrapper {
     box-shadow: none;
   }
+}
+.color-input-picker.open {
+  visibility: visible;
+  opacity: 1;
+  z-index: 1;
 }
 </style>
   
