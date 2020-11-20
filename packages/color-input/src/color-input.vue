@@ -39,7 +39,7 @@ function colorMap(value) {
     : value;
 }
 export default {
-  name: "colorPicker",
+  name: "colorInput",
   components: {
     VColor: VColor,
   },

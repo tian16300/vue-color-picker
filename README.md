@@ -1,13 +1,13 @@
-# vColorPicker
+# vColorInput
 
 > 基于Vue的颜色选择器插件
 
-[DEMO 演示](http://vue-color-picker.rxshc.com/)
+
 
 ## 安装
 
 ``` bash
-$ npm install vcolorpicker -S
+$ npm install vcolorinput -S
 ```
 ## 使用
 
@@ -15,15 +15,15 @@ $ npm install vcolorpicker -S
 
 ``` bash
 # main.js
-import vcolorpicker from 'vcolorpicker'
-Vue.use(vcolorpicker)
+import vcolorinput from 'vcolorinput'
+Vue.use(vcolorinput)
 ```
 
-在项目中使用 vcolorpicker
+在项目中使用 vcolorinput
 
 ```js
 <template>
-  <colorPicker v-model="color" />
+  <colorInput v-model="color" />
 </template>
 <script>
   export default {
@@ -50,5 +50,5 @@ Vue.use(vcolorpicker)
 `change`颜色值改变的时候触发
 
 ``` js
-<colorPicker v-model="color" v-on:change="headleChangeColor" />
+<colorInput v-model="color" v-on:change="headleChangeColor" />
 ```
