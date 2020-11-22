@@ -13,9 +13,10 @@
      </span>
 
      </div>
-     
-     <!-- 颜色色盘 -->
-    <div ref="picker" class="color-input-picker" :style="{
+     <div  ref="picker" style="position: absolute; top: 0px; left: 0px; width: 100%;">
+       <div>
+          <!-- 颜色色盘 -->
+    <div  class="color-input-picker" v-if="openStatus" :style="{
       left:left,
       top:top
     }" v-bind:class="{ open: openStatus }">
@@ -31,6 +32,9 @@
           ></li>
         </ul>
       </div>
+       </div>
+     </div>
+    
     </div>
 </template>
 
@@ -402,7 +406,6 @@ export default {
     line-height: 1;
     color: #333;
   }
-
   .tColor {
     line-height: 1.4;
     padding: 0 6px;
