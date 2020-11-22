@@ -1,18 +1,19 @@
 <template lang="html">
-  <div class="m-color-picker" tabindex="-1" v-on:click="event => { event.stopPropagation() }">
-    <!-- 颜色显示小方块 -->
-    <div class="color-row">
-      <div class="color-col-2">
-      <div class="colorBtn"
-      v-bind:style="`background: ${showColor}`"
-      v-on:click="handlerOpenPicker"
-      v-bind:class="{ disabled: disabled }"
-    ></div>
-    </div>
-    <div class="color-col-7">
-     <input v-model="value" :disabled="disabled" type="text" class="color-input" @change="handleChangeInput">
+  <div class="m-color-picker color-input-group-wrapper" tabindex="-1" v-on:click="event => { event.stopPropagation() }">
+     <div class="color-input-wrapper color-input-group">
+       <input v-model="value" :disabled="disabled" type="text" class="color-input" @change="handleChangeInput">
+     <span ref="btn" class="color-input-group-addon">
+       <button type="button" class="color-btn" @click="handlerOpenPicker">
+         <div class="colorBtn"
+          v-bind:style="`background: ${showColor}`"
+          v-on:click="handlerOpenPicker"
+          v-bind:class="{ disabled: disabled }"
+        ></div>
+      </button>
+     </span>
+
      </div>
-    </div>
+     
      <!-- 颜色色盘 -->
     <div ref="picker" class="color-input-picker" :style="{
       left:left,
@@ -113,10 +114,29 @@ export default {
   },
   methods: {
     colorMap,
+    getElementLeft(element){
+        /* eslint-disable */
+　　　　let actualLeft = element.offsetLeft;
+　　　　let current = element.offsetParent;
+　　　　while (current !== null){
+　　　　　　actualLeft += current.offsetLeft;
+　　　　　　current = current.offsetParent;
+　　　　}
+　　　　return actualLeft;
+　　},
+   getElementTop(element){
+       /* eslint-disable */
+　　　　let actualTop = element.offsetTop;
+　　　　let current = element.offsetParent;
+　　　　while (current !== null){
+　　　　　　actualTop += current.offsetTop;
+　　　　　　current = current.offsetParent;
+　　　　}
+　　　　return actualTop;
+　　},
     handlerOpenPicker() {
-      let pos = this.$el.getBoundingClientRect();
-      this.left = this.$el.scrollLeft + pos.left + "px";
-      this.top = this.$el.scrollTop + pos.top + 240 + "px";
+      this.left = this.getElementLeft(this.$refs.btn) - 251 + 45  + "px";
+      this.top = this.getElementTop(this.$refs.btn) + 32  + "px";
       this.openStatus = !this.disabled;
     },
     handleChangeInput(e) {
@@ -207,9 +227,8 @@ export default {
   },
   mounted() {
     document.body.append(this.$refs.picker);
-    let pos = this.$el.getBoundingClientRect();
-    this.left = this.$el.scrollLeft + pos.left + "px";
-    this.top = this.$el.scrollTop + pos.top + 280 + "px";
+    this.left = this.getElementLeft(this.$refs.btn) - 251 + 45  + "px";
+    this.top = this.getElementTop(this.$refs.btn) + 32  + "px";
   },
   beforeDestroy() {
     document.removeEventListener(
@@ -223,20 +242,84 @@ export default {
 
 <style lang="scss" scoped>
 .m-color-picker {
-  display: inline-block;
-  .color-row {
-    display: flex;
-    flex-flow: row wrap;
+  &.color-input-group-wrapper{
+        display: inline-block;
+        width: 100%;
+        text-align: start;
+        vertical-align: top;
   }
-  .color-col-2 {
-    flex: 0 0 20%;
-    max-width: 20%;
-    padding-right: 4px;
+  .color-input-group-wrapper{
+        display: inline-block;
+        width: 100%;
+        text-align: start;
+        vertical-align: top;
   }
-  .color-col-7 {
-    flex: 0 0 70%;
-    max-width: 70%;
-    padding: 0 4px;
+  .color-input-group{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    color: rgba(0,0,0,.65);
+    font-size: 14px;
+    font-variant: tabular-nums;
+    line-height: 1.5;
+    list-style: none;
+    font-feature-settings: "tnum";
+    position: relative;
+    display: table;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    .color-input{
+      display: table-cell;
+      float: left;
+      width: 100%;
+      margin-bottom: 0;
+      text-align: inherit;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .color-input-group-addon{
+      position: relative;
+      padding: 0;
+      color: rgba(0,0,0,.65);
+      font-weight: 400;
+      font-size: 14px;
+      text-align: center;
+      background-color: #fafafa;
+      border: 0;
+      border-radius: 4px;
+      transition: all .3s;
+      display: table-cell;
+      width: 1px;
+      line-height: 0;
+      vertical-align: top;
+    }
+    .color-btn,button.color-btn{
+          line-height: 1;
+          position: relative;
+          display: inline-block;
+          font-weight: 400;
+          white-space: nowrap;
+          text-align: center;
+          background-image: none;
+          box-shadow: 0 2px 0 rgba(0,0,0,.015);
+          cursor: pointer;
+          transition: all .3s cubic-bezier(.645,.045,.355,1);
+          user-select: none;
+          touch-action: manipulation;
+          height: 32px;
+          padding: 6px 10px;
+          font-size: 14px;
+          border-radius: 4px;
+          background-color: #fff;
+          border-width: 1px;
+          border-style: solid;
+          border-color: #d9d9d9;
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+          border-left-width: 0;
+          outline: 0;
+    }
   }
   .color-input {
     box-sizing: border-box;
@@ -264,41 +347,18 @@ export default {
       border-right-width: 1px !important;
     }
   }
-  position: relative;
-  text-align: left;
-  font-size: 14px;
-  outline: none;
   .colorBtn {
-    width: 100%;
-    height: 32px;
+    width: 24px;
+    height: 100%;
     display: inline-block;
     box-shadow: rgba(0, 0, 0, 0.15) 0px 0px 0px 1px inset;
-    border-radius: 3px;
-    margin-right: 10px;
+    border-radius: 0;
+    margin-right: 0;
     cursor: pointer;
-    vertical-align: middle;
+    vertical-align: top;
   }
   .colorBtn.disabled {
     cursor: no-drop;
-  }
-
-  .hd {
-    overflow: hidden;
-    line-height: 29px;
-    .colorView {
-      width: 100px;
-      height: 30px;
-      float: left;
-      transition: background-color 0.3s ease;
-    }
-    .defaultColor {
-      width: 80px;
-      float: right;
-      text-align: center;
-      border: 1px solid #ddd;
-      cursor: pointer;
-      color: #333;
-    }
   }
 }
 .color-input-picker {
@@ -313,7 +373,7 @@ export default {
     margin-top: -10px;
   }
   /deep/ .cp__ctrl-pane {
-    padding: 8px 8px;
+    padding: 6px 8px;
   }
   /deep/ .cp__fm-fields {
     line-height: 1.2;

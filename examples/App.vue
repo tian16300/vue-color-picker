@@ -1,12 +1,12 @@
 <template>
   <div id="app">
     <div class="page-header">
-      <h1>vColorPicker</h1>
+      <h1>vColorInput</h1>
       <h2>基于 Vue 的颜色选择器插件</h2>
-      <a href="https://github.com/zuley/vue-color-picker" class="btn" target="_blank">View on GitHub</a>
+      <!-- <a href="https://github.com/zuley/vue-color-picker" class="btn" target="_blank">View on GitHub</a> -->
     </div>
     <div class="page-content" v-hljs>
-      <h1>vColorPicker</h1>
+      <h1>vColorInput</h1>
       <p>本插件仿照<code>Angular</code>的<code><a href="http://zhangbobell.github.io/color-picker/" target="_blank">color-picker</a></code>插件制作</p>
       <h2>Demo</h2>
       <ColorInput v-model="color" v-on:change="headleChangeColor"></ColorInput>&nbsp;
@@ -39,17 +39,17 @@ Vue.use(vcolorinput)
   }
 &lt;/script&gt;</pre>
       <h2>选项</h2>
-      <p>你可以通过在所在的元素上设置以下属性来配置<code>color-picker</code></p>
+      <p>你可以通过在所在的元素上设置以下属性来配置<code>color-input</code></p>
       <ol>
         <li><code>defaultColor</code>：默认颜色，如<code>defaultColor="#ff0000"</code></li>
         <li><code>disabled</code>：禁用状态，如<code>disabled=true</code></li>
       </ol>
       <h2>事件</h2>
       <p><code>change</code>颜色值改变的时候触发</p>
-<pre>&lt;colorPicker v-model=&quot;color&quot; v-on:change=&quot;headleChangeColor&quot;&gt;&lt;/colorPicker&gt;
+<pre>&lt;ColorInput v-model=&quot;color&quot; @change=&quot;headleChangeColor&quot;&gt;&lt;/ColorInput&gt;
 </pre>
     </div>
-    <div class="page-footer">Vue-color-picker 插件由<a href="http://www.rxshc.com/" target="_blank">猪不乐意</a>编写</div>
+    
   </div>
 </template>
 
